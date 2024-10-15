@@ -5,46 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Algorithm Designs - Spatial Mapping with the Brain</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="module" src="algorithm-design/example-1/calibration.js"></script>
+    <script type="module" src="algorithm-design/example-1/algorithm-view.js"></script>
 </head>
 <body>
     <header>
         <h1>Algorithm Designs</h1>
     </header>
-    <section>
-        <h2>Core Algorithms and Hardware Options for Spatial Mapping</h2>
 
-        <h3>Hardware Considerations: EMOTIV EPOC and MN8</h3>
-        <p>
-            The EMOTIV EPOC and MN8 headsets are two primary options for collecting EEG data for this project. Both devices are capable of capturing high-resolution brainwave activity:
-        </p>
-        <ul>
-            <li><strong>EMOTIV EPOC:</strong> A multi-channel EEG headset that allows for real-time data streaming and cognitive monitoring. It’s widely used for research in neuroscience and BCI (Brain-Computer Interface) applications. The device’s API can be integrated into the spatial mapping system to pull live brainwave data for real-time processing.</li>
-            <li><strong>EMOTIV MN8:</strong> A smaller, more portable EEG device designed for mobile brain monitoring. While it has fewer sensors compared to the EPOC, it’s still effective for tracking brain activity related to motor tasks. MN8 can be integrated with the API for pulling data directly into our algorithm for analysis.</li>
-        </ul>
-        <p>Both devices can be leveraged using the <a href="https://emotiv.gitbook.io/cortex-api/" target="_blank">EMOTIV Cortex API</a> to access raw EEG data, which will feed into the spatial mapping algorithms.</p>
+    <div style="display: flex; height: 600px;">
+        <!-- Algorithm Part (left) -->
+        <div id="algorithm-container" style="flex: 1; background-color: #f8f8f8; padding: 20px;">
+            <canvas id="algorithmCanvas" width="400" height="600"></canvas>
+        </div>
 
-        <h3>API Integration Plan</h3>
-        <p>
-            The EMOTIV Cortex API will allow us to stream EEG data in real-time to our spatial mapping system. Here’s how the process works:
-        </p>
-        <ol>
-            <li>Establish a connection to the EMOTIV device using the Cortex API.</li>
-            <li>Pull raw EEG data streams, including specific brainwave frequencies like Alpha, Beta, Theta, and Gamma waves.</li>
-            <li>Preprocess the data to filter out noise and extract key features using Python libraries like <code>mne</code> and <code>scikit-learn</code>.</li>
-            <li>Feed the preprocessed data into our spatial mapping algorithm for real-time visualization of brain activity during motor tasks.</li>
-        </ol>
+        <!-- 3D Model Part (right) -->
+        <div id="threejs-container" style="flex: 1; background-color: #f0f0f0;"></div>
+    </div>
 
-        <h3>Spatial Mapping Algorithms</h3>
-        <p>
-            For mapping brain activity during motor tasks, we will implement the following algorithms:
-        </p>
-        <ul>
-            <li><strong>Convolutional Neural Network (CNN):</strong> Used to identify spatial patterns from the EEG data. The EEG signal is treated as a 2D image, with electrodes representing the "pixels" of brain activity.</li>
-            <li><strong>Motor Skills Algorithm:</strong> This algorithm identifies patterns in the EEG data associated with motor tasks, such as hand movements or walking. By mapping motor skill-related brain activity, the algorithm can predict and visualize which parts of the brain are active during specific motor functions.</li>
-            <li><strong>Spatial Temporal Patterns:</strong> By incorporating temporal data, we can track how brain activity shifts spatially over time as motor skills are performed.</li>
-        </ul>
+    <!-- Glowing Button -->
+    <button id="nextButton" style="
+        position: fixed; 
+        bottom: 20px; 
+        right: 20px; 
+        padding: 10px 20px;
+        border: 2px solid #ccc;
+        background-color: #333;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        box-shadow: 0 0 5px #ccc, 0 0 10px #ccc;
+        transition: box-shadow 0.4s ease-in-out;
+    ">Next</button>
 
+    <footer>
         <p><a href="index.html">Back to Home</a></p>
-    </section>
+    </footer>
+
+    <script>
+        // Initialize both the 3D model and the algorithm boxes on page load
+        window.onload = function() {
+            init(); // Call 3D model initialization
+            drawAlgorithm(); // Call algorithm drawing function
+        };
+    </script>
 </body>
 </html>

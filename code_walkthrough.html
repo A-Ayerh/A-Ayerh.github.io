@@ -3,23 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Code Walkthrough - Spatial Mapping with the Brain</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+    <!-- Header -->
     <header>
-        <h1>Code Walkthrough</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="research.html">Research</a>
+            <a href="code_walkthrough.html">Code</a>
+            <a href="algorithm_designs.html">Algorithms</a>
+            <a href="demos.html">Demos</a>
+        </nav>
     </header>
+
+    <!-- Code Walkthrough Section -->
     <section>
         <h2>Key Components of the Code</h2>
-        <p>Below are some of the core components of the spatial mapping project’s code:</p>
         <ul>
-            <li><strong>EEG Data Preprocessing:</strong> Before running any models, the raw EEG data must be preprocessed. We use the <code>mne</code> Python library to filter and clean the data.</li>
-            <li><strong>Model Training:</strong> We use a Convolutional Neural Network (CNN) to map spatial patterns in the brain’s electrical activity. The model is built using <code>TensorFlow</code>, and we leverage Kaggle’s GPU to accelerate training.</li>
-            <li><strong>Spatial Mapping Output:</strong> After the model is trained, we use the learned weights to generate a spatial map of brain activity.</li>
+            <li>EEG Data Preprocessing</li>
+            <li>Model Training using CNNs</li>
+            <li>Spatial Mapping Output</li>
         </ul>
-        <p>The full code is available on <a href="https://github.com/A-Ayerh/Spatial-Mapping-with-the-Brain" target="_blank">GitHub</a>.</p>
-        <p><a href="index.html">Back to Home</a></p>
     </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Andrew Ayerh. All rights reserved.</p>
+    </footer>
+
 </body>
 </html>

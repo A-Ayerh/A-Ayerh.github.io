@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Navigation</title>
+    <style>
+        /* Navigation and Dropdown Styles */
+        header {
+            background-color: #1c1c1c;
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+
+        nav ul li {
+            display: inline-block;
+            position: relative;
+        }
+
+        nav ul li a {
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            text-transform: uppercase;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #333;
+        }
+
+        /* Fix Dropdown to be directly under title */
+        .dropdown {
+            display: none;
+            position: absolute;
+            background-color: #1c1c1c;
+            top: 100%; /* Positioned directly below the parent */
+            left: 0;
+            min-width: 160px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            text-transform: none;
+        }
+
+        .dropdown a:hover {
+            background-color: #333;
+        }
+
+        nav ul li:hover .dropdown {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header with Dropdown Navigation -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li>
+                    <a href="#">Projects</a>
+                    <ul class="dropdown">
+                        <li><a href="spatial_mapping.html">Spatial Mapping with the Brain</a></li>
+                        <li><a href="remote_cuda.html">Remote CUDA Programming</a></li>
+                        <li><a href="auto_wielding_katanas.html">Auto Welding Katanas</a></li>
+                        <li><a href="upcoming_projects.html">Upcoming Projects</a></li>
+                    </ul>
+                </li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        
+    </header>
+
+</body>
+</html>

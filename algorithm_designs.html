@@ -3,53 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Algorithm Designs - Spatial Mapping with the Brain</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script type="module" src="algorithm-design/example-1/calibration.js"></script>
-    <script type="module" src="algorithm-design/example-1/algorithm-view.js"></script>
 </head>
 <body>
+
+    <!-- Header -->
     <header>
-        <h1>Algorithm Designs</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="research.html">Research</a>
+            <a href="code_walkthrough.html">Code</a>
+            <a href="algorithm_designs.html">Algorithms</a>
+            <a href="demos.html">Demos</a>
+        </nav>
     </header>
 
-    <div style="display: flex; height: 600px;">
-        <!-- Algorithm Part (left) -->
-        <div id="algorithm-container" style="flex: 1; background-color: #f8f8f8; padding: 20px;">
-            <canvas id="algorithmCanvas" width="400" height="600"></canvas>
-        </div>
+    <!-- Algorithms Section -->
+    <section>
+        <h2>Exploring Algorithms</h2>
+        <p>Algorithm Design for this project.</p>
+    </section>
 
-        <!-- 3D Model Part (right) -->
-        <div id="threejs-container" style="flex: 1; background-color: #f0f0f0;"></div>
-    </div>
-
-    <!-- Glowing Button -->
-    <button id="nextButton" style="
-        position: fixed; 
-        bottom: 20px; 
-        right: 20px; 
-        padding: 10px 20px;
-        border: 2px solid #ccc;
-        background-color: #333;
-        color: #fff;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 5px;
-        box-shadow: 0 0 5px #ccc, 0 0 10px #ccc;
-        transition: box-shadow 0.4s ease-in-out;
-    ">Next</button>
-
+    <!-- Footer -->
     <footer>
-        <p><a href="index.html">Back to Home</a></p>
+        <p>&copy; 2024 Andrew Ayerh. All rights reserved.</p>
     </footer>
 
-    <script>
-        // Initialize both the 3D model and the algorithm boxes on page load
-        window.onload = function() {
-            init(); // Call 3D model initialization
-            drawAlgorithm(); // Call algorithm drawing function
-        };
-    </script>
 </body>
 </html>

@@ -3,56 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Research - Spatial Mapping with the Brain</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+    <!-- Header -->
     <header>
-        <h1>Research</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="research.html">Research</a>
+            <a href="code_walkthrough.html">Code</a>
+            <a href="algorithm_designs.html">Algorithms</a>
+            <a href="demos.html">Demos</a>
+        </nav>
     </header>
+
+    <!-- Research Section -->
     <section>
-        <h2>Brainwaves and EEG Data in Spatial Mapping</h2>
-        <p>
-            Understanding the brainwaves captured during EEG monitoring is crucial for spatial mapping. Here’s a breakdown of the specific brainwave types we will be using in this project:
-        </p>
-        <ul>
-            <li><strong>Alpha Waves (8-13 Hz):</strong> Typically associated with relaxation and calm states, Alpha waves are key when analyzing spatial attention and focus.</li>
-            <li><strong>Beta Waves (13-30 Hz):</strong> These waves are linked to active thinking, problem-solving, and motor control. They will be particularly important for mapping brain activity during motor tasks.</li>
-            <li><strong>Theta Waves (4-8 Hz):</strong> Related to deep meditation, sleep, and learning. Theta waves can provide insight into subconscious brain processes during spatial mapping.</li>
-            <li><strong>Gamma Waves (30-100 Hz):</strong> The fastest brainwaves, associated with higher cognitive functions, memory, and learning. Gamma waves will help in mapping complex motor tasks and higher-level brain activities.</li>
-        </ul>
-
-        <h2>Exploring Spatial Mapping Algorithms</h2>
-        <p>
-            The choice of spatial mapping algorithm is critical to the success of the project. Initially, we will explore simpler algorithms to get started with the EEG data, with a plan to transition to more advanced models as the project develops.
-        </p>
-        <ul>
-            <li><strong>Principal Component Analysis (PCA):</strong> PCA is a simple dimensionality reduction algorithm that helps us reduce the noise in the EEG data and focus on the most important spatial patterns in the brain's electrical activity.</li>
-            <li><strong>t-SNE (t-Distributed Stochastic Neighbor Embedding):</strong> t-SNE is a powerful tool for visualizing high-dimensional EEG data. It will be useful in representing brain activity in a lower-dimensional space for easier visualization of spatial patterns.</li>
-            <li><strong>Convolutional Neural Networks (CNNs):</strong> CNNs are often used for image recognition, but they are also excellent for analyzing spatial data from EEG signals, treating the electrode positions as 2D data points for recognizing patterns.</li>
-            <li><strong>Future Considerations: LSTM Networks:</strong> LSTMs will be explored in the later stages of the project. These networks are well-suited for capturing temporal dependencies, allowing us to analyze how spatial patterns change over time during motor tasks.</li>
-        </ul>
-
-        <h2>Related Research: Spatial Mapping with Audio</h2>
-        <p>
-            A similar approach to spatial mapping has been explored in other fields. For example, a group conducted research on spatial mapping using audio data, which shares some parallels with this project. You can learn more about their work in this IEEE paper:
-        </p>
-        <ul>
-            <li><a href="https://ieeexplore.ieee.org/document/10096819" target="_blank">Spatial Mapping with Audio Data - IEEE Paper</a></li>
-        </ul>
-        <p>This research may provide valuable insights into the methodologies for mapping non-visual spatial data and could be adapted for use in EEG-based spatial mapping projects.</p>
-
-        <h2>EEG Data Collection</h2>
-        <p>
-            The EEG data will be collected using EMOTIV devices (EPOC or MN8) and processed using the EMOTIV Cortex API. The data will undergo preprocessing to remove noise and artifacts, preparing it for input into our spatial mapping algorithms. 
-        </p>
-        
-        <h2>Future Directions</h2>
-        <p>
-            As the project progresses, we plan to integrate real-time analysis of EEG data during specific tasks, such as walking or performing fine motor movements. The goal is to refine the algorithms for practical use in both neuroscience research and potential BCI applications.
-        </p>
-        
-        <p><a href="index.html">Back to Home</a></p>
+        <h2>Research on Brainwaves and EEG Data</h2>
+        <p>Understanding the brainwaves captured during EEG monitoring is crucial for spatial mapping...</p>
+        <p>Read more about how Alpha, Beta, Theta, and Gamma waves play key roles in spatial mapping of cognitive and motor tasks.</p>
     </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Andrew Ayerh. All rights reserved.</p>
+    </footer>
+
 </body>
 </html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Scroll Section</title>
+    <style>
+        /* Horizontal Scroll Menu */
+        .scroll-menu {
+            display: flex;
+            overflow: hidden;
+            width: 100%;
+            background-color: #1c1c1c;
+            margin-top: 2px;
+            position: relative;
+            height: 300px;
+            max-height: 300px;
+            box-sizing: border-box;
+        }
+
+        .scroll-menu ul {
+            display: flex;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            transition: transform 5s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .scroll-menu li {
+            min-width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #222;
+            color: #fff;
+            font-size: 28px;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        /* Text section styling */
+        .scroll-text {
+            flex: 1;
+            padding-right: 20px;
+            max-width: 50%;
+        }
+
+        .scroll-text a {
+            color: #1e90ff;
+            text-decoration: none;
+            font-size: 28px;
+        }
+
+        .scroll-text p {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #ccc;
+        }
+
+        /* Animation container */
+        #webglContainer {
+            flex: 1;
+            max-width: 50%;
+            width: 50%;
+            height: 100%;
+            position: relative;
+            background-color: #111;
+        }
+
+        /* Pagination Dots */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .pagination-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #cccccc41;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .pagination-dot.active {
+            background-color: #fff;
+        }
+    </style>
+    <!-- Load Three.js directly into the page -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <!-- Infinite Horizontal Scroll Menu -->
+    <section class="scroll-menu">
+        <ul id="scroll-items">
+            <li>
+                <div class="scroll-text">
+                    <a href="spatial_mapping.html" target="_top">Spatial Mapping with the Brain</a>
+                    <p>Explore real-time EEG data to understand how the brain maps spatial tasks.</p>
+                </div>
+            </li>
+            <li>
+                <div class="scroll-text">
+                    <a href="remote_cuda.html" target="_top">Remote CUDA Programming</a>
+                    <p>A guide on setting up remote development for CUDA-based programming.</p>
+                </div>
+            </li>
+            <li>
+                <div class="scroll-text">
+                    <a href="auto_wielding_katanas.html" target="_top">Auto Wielding Katanas</a>
+                    <p>Automating the precision hand placement on the katana handle</p>
+                    <p>so that I can grab the sword from any angle behind myself.</p>
+                </div>
+            </li>
+            <li>
+                <div class="scroll-text">
+                    <a href="upcoming_projects.html" target="_top">Upcoming Projects</a>
+                    <p>My projects are for things that I currently desire, but they may assist you too.</p>
+                </div>
+            </li>
+        </ul>
+    </section>
+
+    <div class="pagination">
+        <div class="pagination-dot" data-index="0"></div>
+        <div class="pagination-dot" data-index="1"></div>
+        <div class="pagination-dot" data-index="2"></div>
+        <div class="pagination-dot" data-index="3"></div>
+    </div>
+
+    <!-- JavaScript for Infinite Scroll and Pagination -->
+    <script>
+        const scrollItems = document.getElementById('scroll-items');
+        const dots = document.querySelectorAll('.pagination-dot');
+        let currentIndex = 0;
+        const totalItems = 4;
+        let isScrolling = false;
+
+        function scrollNext() {
+            if (isScrolling) return;
+            isScrolling = true;
+
+            currentIndex = (currentIndex + 1) % (totalItems + 1);
+            const translateXValue = -100 * currentIndex;
+            scrollItems.style.transform = `translateX(${translateXValue}%)`;
+
+            if (currentIndex === totalItems) {
+                setTimeout(() => {
+                    scrollItems.style.transition = 'none';
+                    scrollItems.style.transform = 'translateX(0%)';
+                    currentIndex = 0;
+                    setTimeout(() => {
+                        scrollItems.style.transition = 'transform 2s ease';
+                        isScrolling = false;
+                    }, 50);
+                }, 3000); 
+            } else {
+                updateDots(currentIndex);
+                isScrolling = false;
+            }
+        }
+
+        function updateDots(index) {
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index % totalItems].classList.add('active');
+        }
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                currentIndex = parseInt(dot.getAttribute('data-index'));
+                const translateXValue = -100 * currentIndex;
+                scrollItems.style.transform = `translateX(${translateXValue}%)`;
+                updateDots(currentIndex);
+            });
+        });
+
+        setInterval(scrollNext, 20000); // Change interval to 20 seconds
+
+        updateDots(currentIndex);
+
+        // Dynamically load brain-mapping-example.html into the #webglContainer
+        function loadBrainMapping() {
+            const webglContainer = document.getElementById('webglContainer');
+            
+            // Debugging: check if the container exists
+            if (!webglContainer) {
+                console.error('WebGL Container not found!');
+                return;
+            }
+
+            fetch('./scroll-bar-examples/brain-mapping-example.html')
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const scriptTags = doc.querySelectorAll('script'); // Find script tags
+                    webglContainer.innerHTML = doc.body.innerHTML;
+
+                    // Load script tags from brain-mapping-example.html
+                    scriptTags.forEach((script) => {
+                        const newScript = document.createElement('script');
+                        if (script.src) {
+                            newScript.src = script.src;
+                        } else {
+                            newScript.textContent = script.textContent;
+                        }
+                        document.body.appendChild(newScript);
+                    });
+                })
+                .catch(err => console.warn('Error loading brain-mapping-example.html:', err));
+        }
+
+        // Trigger loading brain-mapping-example.html when the first section appears
+        if (currentIndex === 0) {
+            loadBrainMapping();
+        }
+    </script>
+
+</body>
+</html>

@@ -1,46 +1,107 @@
+/* Global Styles */
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #f0f0f0;
+    height: 100%; /* Ensures the body height takes up the full viewport */
 }
 
-header {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 0;
-    text-align: center;
-}
-
-section {
-    padding: 20px;
-    max-width: 800px;
-    margin: auto;
-    background-color: #fff;
-}
-
-h1 {
-    font-size: 2em;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-ul li {
-    margin-bottom: 10px;
+html {
+    height: 100%; /* Ensures the html height takes up the full viewport */
 }
 
 a {
     text-decoration: none;
-    color: #007bff;
+    color: #f0f0f0;
 }
 
 a:hover {
-    text-decoration: underline;
+    color: #1e90ff;
 }
 
+/* Header Section */
+header {
+    background-color: #1c1c1c;
+    padding: 20px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+nav a {
+    padding: 10px;
+    font-size: 18px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh; /* Ensures hero takes full viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #222; /* Dark background */
+    color: #fff;
+    text-align: center;
+    margin-top: 60px; /* Prevents overlap with the fixed header */
+}
+
+.hero h1 {
+    font-size: 48px;
+}
+
+.hero p {
+    font-size: 24px;
+}
+
+/* Sections for About, Services, Portfolio, Contact */
+section {
+    padding: 80px 20px;
+    text-align: center;
+    background-color: #1b1b1b; /* Background for sections */
+}
+
+h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Footer */
 footer {
-    margin-top: 20px;
+    padding: 20px;
+    background-color: #121212;
+    text-align: center;
+    color: #999;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
+
+    .hero p {
+        font-size: 18px;
+    }
 }

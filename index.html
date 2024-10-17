@@ -3,47 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Spatial Mapping with the Brain</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Adjust Hero Section */
+        .hero {
+            height: 30vh; /* Reduce height to move the text up */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #222;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+        }
+
+        .hero p {
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Spatial Mapping with the Brain</h1>
-    </header>
 
-    <section id="about">
-        <h2>Andrew Ayerh</h2>
-        <p>Hi, I'm Andrew Ayerh, the creator of this project. My journey through neuroscience, machine learning, and neural interfacing has inspired me to create a spatial mapping system using real-time EEG data.</p>
-        <p>Leveraging my experience at EMOTIV and Freelance Robotics, I’ve developed this project to explore how spatial mapping can be used to understand brain activity during motor tasks and other cognitive functions.</p>
-        <p>This GitHub Pages site is new, and many sections are still under development. I’ll be adding more content and demos soon, so stay tuned!</p>
+    <!-- Navigation Placeholder -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div>
+            <h1>Welcome to My Portfolio</h1>
+            <p>Hi, I'm Andrew. This is the place where I share my projects, research, and problem-solving journey. I love exploring innovative solutions and helping others tackle challenges similar to mine.</p>
+            <p>Everything here is open source, so feel free to use any code or research that inspires you or helps you achieve your own goals. Let's create some cool and useful stuff!</p>
+        </div>
     </section>
 
-    <section id="project-details">
-        <h3>Explore the Project</h3>
-        <p>Find out more about the research, algorithms, and demos behind the "Spatial Mapping with the Brain" project:</p>
-        <ul>
-            <li><a href="research.html">Research</a></li>
-            <li><a href="demos.html">Demos</a></li>
-            <li><a href="code_walkthrough.html">Code Walkthrough</a></li>
-            <li><a href="algorithm_designs.html">Algorithm Designs</a></li>
-        </ul>
-    </section>
+        <!-- Include the Scroll Section -->
+        <section id="scroll-section">
+            <!-- This will load scroll_section.html into the main page -->
+            <object type="text/html" data="scroll_section.html" style="width: 100%; height: 500px;"></object>
+        </section>
 
-    <!-- 3D Human Model and Brain Demo Section -->
-    <section id="demo-section">
-        <h2><a href="walking_example.html">Walking Example</a></h2>
-        <p>Click the link above to view the walking example in its own dedicated page. This is a 3D human figure made out of shapes with a brain inside its head.</p>
-        <div id="threejs-container"></div>
-    </section>
-
+    <!-- Footer -->
     <footer>
-        <h4>Connect with Me</h4>
-        <ul>
-            <li><a href="https://github.com/A-Ayerh/Spatial-Mapping-with-the-Brain" target="_blank">GitHub</a></li>
-            <li><a href="https://www.kaggle.com/code/andrewayerh/spatial-mapping-with-the-brain" target="_blank">Kaggle</a></li>
-            <li><a href="https://www.linkedin.com/in/andrew-ayerh-04288b262/" target="_blank">LinkedIn</a></li>
-            <li><a href="mailto:aayerh@asu.edu">Email</a></li>
-        </ul>
+        <p>&copy; 2024 Andrew Ayerh. All rights reserved.</p>
     </footer>
+
+    <!-- Load Navigation and Scroll Section Scripts -->
+    <script>
+        // Function to dynamically load content
+        function loadContent(url, placeholderId) {
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById(placeholderId).innerHTML = data;
+                })
+                .catch(error => console.error('Error loading content:', error));
+        }
+
+        // Load navigation and scroll section after the page loads
+        window.onload = function() {
+            loadContent('navigation.html', 'navigation-placeholder'); // Load navigation
+            loadContent('scroll_section.html', 'scroll-section-placeholder'); // Load scroll section
+        };
+    </script>
+
 </body>
 </html>

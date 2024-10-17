@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Project Side Navigation</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Side Navigation Styles */
+        .side-nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #333;
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 1000;
+            color: white;
+        }
+
+        /* Search Bar */
+        .side-nav input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        /* Dropdown Styling */
+        .dropdown-btn {
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px 0;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .dropdown-content {
+            display: none;
+            list-style: none;
+            padding-left: 15px;
+        }
+
+        .dropdown-btn.active + .dropdown-content {
+            display: block;
+        }
+
+        /* Search Results Styling */
+        .search-results {
+            list-style-type: none;
+            padding-left: 10px;
+            margin-top: 10px;
+        }
+
+        .search-results li {
+            cursor: pointer;
+            color: lightblue;
+            margin: 5px 0;
+        }
+
+        .search-results li:hover {
+            text-decoration: underline;
+        }
+
+        /* Pulse effect for matched text */
+        @keyframes pulse {
+            0% { color: red; }
+            50% { color: orange; }
+            100% { color: red; }
+        }
+
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+
+<div class="side-nav" id="side-nav">
+    <!-- Search Bar -->
+    <input type="text" id="search-bar" placeholder="Search...">
+
+    <!-- Dynamic Dropdown Content -->
+    <ul id="project-links">
+        <!-- This will be dynamically loaded based on the project -->
+    </ul>
+
+    <!-- Search Results -->
+    <ul id="search-results" class="search-results">
+        <!-- Search results will be displayed here -->
+    </ul>
+</div>
+
+<script>
+    // Toggle dropdown visibility
+    function initializeDropdown() {
+        document.querySelectorAll('.dropdown-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const dropdownContent = this.nextElementSibling;
+                dropdownContent.classList.toggle('active');
+                this.classList.toggle('active');
+            });
+        });
+    }
+
+    // Search functionality for subsections only (ignores main sections)
+    const searchBar = document.getElementById('search-bar');
+    const searchResults = document.getElementById('search-results');
+    const subsections = document.querySelectorAll('.main-content section h3'); // Only select subsections
+
+    searchBar.addEventListener('input', function() {
+        const query = searchBar.value.toLowerCase();
+        searchResults.innerHTML = ''; // Clear previous results
+
+        if (query) {
+            subsections.forEach(subsection => {
+                const subsectionText = subsection.innerText.toLowerCase();
+                const subsectionParent = subsection.closest('section');
+
+                if (subsectionText.includes(query)) {
+                    const li = document.createElement('li');
+                    li.innerText = subsection.innerText;
+                    li.addEventListener('click', () => {
+                        subsectionParent.scrollIntoView({ behavior: 'smooth' });
+                    });
+                    searchResults.appendChild(li);
+
+                    // Highlight the matching text in the subsection
+                    pulseText(subsectionParent, query);
+                } else {
+                    removePulse(subsectionParent);
+                }
+            });
+        } else {
+            subsections.forEach(subsection => {
+                const subsectionParent = subsection.closest('section');
+                removePulse(subsectionParent);
+            });
+        }
+    });
+
+    // Apply pulse effect to matching text
+    function pulseText(section, query) {
+        removePulse(section); // Remove previous pulses first
+        const regex = new RegExp(query, 'gi');
+
+        section.querySelectorAll('p').forEach(paragraph => {
+            paragraph.innerHTML = paragraph.innerHTML.replace(regex, match => `<span class="pulse">${match}</span>`);
+        });
+    }
+
+    // Remove pulse effect
+    function removePulse(section) {
+        section.querySelectorAll('.pulse').forEach(span => {
+            span.outerHTML = span.innerText;
+        });
+    }
+
+    // Initialize the dropdown behavior
+    initializeDropdown();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Upcoming Projects</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navigation Placeholder -->
+    <div id="navigation-placeholder"></div>
+
+    <!-- Project Content -->
+    <section>
+        <h2>Upcoming Projects</h2>
+        <p>My projects are for things that I currently desire, but hopefully, they may assist you as well.</p>
+        <p>Stay tuned for more exciting developments in automation, robotics, and programming!</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Andrew Ayerh. All rights reserved.</p>
+    </footer>
+
+    <!-- Load Navigation Script -->
+    <script>
+        function loadContent(url, placeholderId) {
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById(placeholderId).innerHTML = data;
+                })
+                .catch(error => console.error('Error loading content:', error));
+        }
+
+        window.onload = function() {
+            loadContent('navigation.html', 'navigation-placeholder');
+        };
+    </script>
+
+</body>
+</html>

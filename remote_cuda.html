@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Remote CUDA Programming Setup</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Navigation and Dropdown Styles */
+        header {
+            background-color: #1c1c1c;
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+
+        nav ul li {
+            display: inline-block;
+            position: relative;
+        }
+
+        nav ul li a {
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            text-transform: uppercase;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #333;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            background-color: #1c1c1c;
+            top: 100%;
+            left: 0;
+            min-width: 160px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown a {
+            display: block;
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            text-transform: none;
+        }
+
+        .dropdown a:hover {
+            background-color: #333;
+        }
+
+        nav ul li:hover .dropdown {
+            display: block;
+        }
+
+        /* Side navigation styles */
+        .side-nav {
+            width: 250px;
+            position: fixed;
+            height: 100%;
+            background-color: #333; /* Dark gray background */
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            z-index: 1000;
+            top: 70px; /* Below the header */
+            transition: left 0.3s ease;
+        }
+
+        .side-nav.collapsed {
+            left: -250px;
+        }
+
+        /* Toggle button */
+        .toggle-btn {
+            display: none;
+            position: fixed;
+            top: 85px;
+            left: 250px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 1001;
+            transition: left 0.3s ease;
+        }
+
+        /* Main content section */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+            padding-top: 90px; /* Account for the top navigation */
+        }
+
+        .side-nav.collapsed ~ .main-content {
+            margin-left: 0;
+        }
+
+        /* Search bar styling */
+        .side-nav input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        /* Dropdown section styling */
+        .side-nav ul {
+            list-style-type: none;
+            padding-left: 15px;
+            margin: 0;
+        }
+
+        .side-nav ul li {
+            color: #fff; /* White text for legibility */
+            font-size: 16px;
+            padding: 8px 0;
+        }
+
+        .side-nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            display: block;
+        }
+
+        .side-nav ul li a:hover {
+            text-decoration: underline;
+            color: #1e90ff; /* Light blue on hover */
+        }
+
+        /* Dropdown content */
+        .dropdown-content {
+            display: none;
+            list-style-type: none;
+            padding-left: 15px;
+        }
+
+        .dropdown-btn {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+
+        .dropdown-btn.active + .dropdown-content {
+            display: block;
+        }
+
+        .search-results li {
+            cursor: pointer;
+            color: lightblue;
+            margin: 5px 0;
+        }
+
+        .search-results li:hover {
+            text-decoration: underline;
+        }
+
+        /* Pulse effect */
+        @keyframes pulse {
+            0% {
+                color: red;
+            }
+            50% {
+                color: orange;
+            }
+            100% {
+                color: red;
+            }
+        }
+
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+
+        /* Section Divider */
+        .section-divider {
+            width: 100%;
+            height: 4px;
+            background-color: #1e90ff;
+            margin: 40px 0;
+        }
+
+        h2, h3 {
+            color: white; /* White text for the main content headings */
+        }
+
+        p {
+            color: #d3d3d3; /* Light gray text for content paragraphs */
+        }
+
+        /* Responsive handling for mobile screens */
+        @media (max-width: 768px) {
+            .side-nav {
+                width: 100%;
+                left: -100%;
+            }
+
+            .side-nav.collapsed {
+                left: 0;
+            }
+
+            .toggle-btn {
+                display: block;
+                left: 0;
+                top: 70px; /* Adjust for mobile when collapsed */
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation with Dropdown -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li>
+                    <a href="#">Projects</a>
+                    <ul class="dropdown">
+                        <li><a href="spatial_mapping.html">Spatial Mapping with the Brain</a></li>
+                        <li><a href="remote_cuda.html">Remote CUDA Programming</a></li>
+                        <li><a href="auto_wielding_katanas.html">Auto Welding Katanas</a></li>
+                        <li><a href="upcoming_projects.html">Upcoming Projects</a></li>
+                    </ul>
+                </li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Toggle Button for collapsing sidebar -->
+    <div class="toggle-btn" id="toggle-btn">☰</div>
+
+    <!-- Side Navigation -->
+    <div class="side-nav" id="side-nav">
+        <!-- Search Bar -->
+        <input type="text" id="search-bar" placeholder="Search...">
+
+        <!-- Dropdown sections with clickable main sections -->
+        <ul>
+            <li>
+                <div class="dropdown-btn">Setup Guide</div>
+                <ul class="dropdown-content">
+                    <li><a href="#setup">1.0 Setup Guide</a></li>
+                    <li><a href="#remote_server_setup">1.1 Remote Server Setup</a></li>
+                    <li><a href="#ssh_setup">1.2 SSH Setup</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="dropdown-btn">Requirements</div>
+                <ul class="dropdown-content">
+                    <li><a href="#requirements">2.0 Requirements</a></li>
+                    <li><a href="#gpu_requirements">2.1 GPU Requirements</a></li>
+                    <li><a href="#software_requirements">2.2 Software Requirements</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="dropdown-btn">Code Examples</div>
+                <ul class="dropdown-content">
+                    <li><a href="#examples">3.0 Code Examples</a></li>
+                    <li><a href="#example1">3.1 Example 1</a></li>
+                    <li><a href="#example2">3.2 Example 2</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <!-- Search Results -->
+        <ul id="search-results" class="search-results">
+            <!-- Dynamic search results will be shown here -->
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <section id="setup">
+            <h2>1.0 Setup Guide</h2>
+            <p>This section introduces how to set up Remote CUDA Programming.</p>
+            
+            <section id="remote_server_setup">
+                <h3>1.1 Remote Server Setup</h3>
+                <p>This subsection covers the setup of the remote server with a GPU.</p>
+            </section>
+            
+            <section id="ssh_setup">
+                <h3>1.2 SSH Setup</h3>
+                <p>This subsection explains how to configure SSH access to the remote server.</p>
+            </section>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section id="requirements">
+            <h2>2.0 Requirements</h2>
+            <p>This section lists the necessary requirements for Remote CUDA Programming.</p>
+
+            <section id="gpu_requirements">
+                <h3>2.1 GPU Requirements</h3>
+                <p>This subsection details the GPU specifications for CUDA programming.</p>
+            </section>
+
+            <section id="software_requirements">
+                <h3>2.2 Software Requirements</h3>
+                <p>This subsection discusses the required software for Remote CUDA programming.</p>
+            </section>
+        </section>
+
+        <div class="section-divider"></div>
+
+        <section id="examples">
+            <h2>3.0 Code Examples</h2>
+            <p>This section provides code examples for Remote CUDA Programming.</p>
+
+            <section id="example1">
+                <h3>3.1 Example 1</h3>
+                <p>This subsection presents the first example of CUDA code.</p>
+            </section>
+
+            <section id="example2">
+                <h3>3.2 Example 2</h3>
+                <p>This subsection presents the second example of CUDA code.</p>
+            </section>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Andrew Ayerh. All rights reserved.</p>
+    </footer>
+
+    <!-- Script to handle sidebar, dropdowns, search, and smooth scrolling -->
+    <script>
+        // Toggle sidebar
+        document.getElementById('toggle-btn').addEventListener('click', function() {
+            const sideNav = document.getElementById('side-nav');
+            sideNav.classList.toggle('collapsed');
+        });
+
+        // Handle dropdown buttons
+        document.querySelectorAll('.dropdown-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Toggle dropdown visibility
+                this.classList.toggle('active');
+                const dropdownContent = this.nextElementSibling;
+                dropdownContent.classList.toggle('active');
+            });
+        });
+
+        // Handle search functionality with pulse effect
+        const searchBar = document.getElementById('search-bar');
+        const searchResults = document.getElementById('search-results');
+        const sections = document.querySelectorAll('.main-content section');
+
+        searchBar.addEventListener('input', function() {
+            const query = searchBar.value.toLowerCase();
+            searchResults.innerHTML = ''; // Clear previous results
+
+            if (query) {
+                sections.forEach(section => {
+                    const sectionText = section.innerText.toLowerCase();
+                    const sectionTitle = section.querySelector('h3')?.innerText; // Only look for subsections
+
+                    if (sectionTitle && sectionText.includes(query)) {
+                        const li = document.createElement('li');
+                        li.innerText = sectionTitle; // Show subsection title
+                        li.addEventListener('click', () => {
+                            section.scrollIntoView({ behavior: 'smooth' });  // Smooth scrolling
+                        });
+                        searchResults.appendChild(li);
+                        pulseText(section, query);
+                    } else {
+                        removePulse(section);
+                    }
+                });
+            } else {
+                sections.forEach(removePulse);
+            }
+        });
+
+        // Apply pulse effect to matching text
+        function pulseText(section, query) {
+            removePulse(section); // Remove previous pulses first
+            const regex = new RegExp(query, 'gi');
+
+            section.querySelectorAll('p').forEach(paragraph => {
+                paragraph.innerHTML = paragraph.innerHTML.replace(regex, match => `<span class="pulse">${match}</span>`);
+            });
+        }
+
+        // Remove pulse effect
+        function removePulse(section) {
+            section.querySelectorAll('.pulse').forEach(span => {
+                span.outerHTML = span.innerText;
+            });
+        }
+
+        // Handle smooth scrolling when navigating directly via sidebar
+        document.querySelectorAll('.side-nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default jump
+                const targetId = this.getAttribute('href').substring(1); // Get the ID without the "#"
+                const targetElement = document.getElementById(targetId);
+                targetElement.scrollIntoView({ behavior: 'smooth' });  // Smooth scrolling
+            });
+        });
+    </script>
+</body>
+</html>

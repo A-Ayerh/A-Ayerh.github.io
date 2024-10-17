@@ -1,0 +1,342 @@
+<!-- Main content starts directly with the 3D animation setup -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script>
+  // Set up the scene, camera, and renderer
+
+  
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  
+  // Set the renderer size to the container where the animation will display
+  const container = document.getElementById('webglContainer'); // WebGL container from the scroll section
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  container.appendChild(renderer.domElement);
+
+  // Set camera position
+  camera.position.z = 8;
+
+  // Create a translucent pink brain-like object
+  const brainGeometry = new THREE.IcosahedronGeometry(1.5, 3);
+  const brainMaterial = new THREE.MeshBasicMaterial({ color: 0xffc0cb, transparent: true, opacity: 0.5 });
+  const brainMesh = new THREE.Mesh(brainGeometry, brainMaterial);
+  brainMesh.position.set(-5, 1, 0); // Position to the left
+  scene.add(brainMesh);
+
+  // Create the label "Brain" above the brain object
+  const loader = new THREE.FontLoader();
+  loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+    const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const brainTextGeometry = new THREE.TextGeometry('Brain', {
+      font: font,
+      size: 0.4,
+      height: 0.05,
+    });
+    const brainTextMesh = new THREE.Mesh(brainTextGeometry, textMaterial);
+    brainTextMesh.position.set(-5.5, 2.5, 0); // Position above the brain
+    scene.add(brainTextMesh);
+
+    // Function to create and animate a single "EEG Data" text box
+    function createAndAnimateEEG() {
+      const textGeometry = new THREE.TextGeometry('EEG Data', {
+        font: font,
+        size: 0.25,
+        height: 0.05,
+      });
+      const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+      textMesh.position.set(-5 + Math.random(), 1 + Math.random(), 0); // Random positions around the brain
+      scene.add(textMesh);
+
+      // Animate the "EEG Data" text moving towards the algorithm box and fading out
+      const start = { x: textMesh.position.x, y: textMesh.position.y, z: textMesh.position.z };
+      const end = { x: algorithmBoxMesh.position.x, y: algorithmBoxMesh.position.y, z: algorithmBoxMesh.position.z };
+      let progress = 0;
+      const duration = 2000; // 2 seconds to animate
+
+      function moveEEG() {
+        progress += 0.02;
+        if (progress < 1) {
+          textMesh.position.x = start.x + (end.x - start.x) * progress;
+          textMesh.position.y = start.y + (end.y - start.y) * progress;
+          textMesh.material.opacity = 1 - progress; // Fade out as it reaches the box
+          requestAnimationFrame(moveEEG);
+        } else {
+          scene.remove(textMesh); // Remove EEG data when it reaches the box
+        }
+      }
+
+      moveEEG();
+    }
+
+    // Function to start an EEG spree every 5 seconds
+    function startEEGSpree() {
+      let eegCount = 0;
+      const eegInterval = setInterval(() => {
+        if (eegCount < 10) {
+          createAndAnimateEEG(eegCount);
+          eegCount++;
+        } else {
+          clearInterval(eegInterval); // Stop EEG spree
+          setTimeout(algorithmGlow, 3000); // Wait 3 seconds before algorithm processes
+        }
+      }, 200); // Every 0.2 seconds
+    }
+
+    // Call the EEG spree function every 5 seconds
+    setInterval(startEEGSpree, 5000);
+
+    // Create a glowing effect for the algorithm box after receiving all the EEG data
+    function algorithmGlow() {
+      const originalColor = algorithmBoxMaterial.color.clone();
+      algorithmBoxMaterial.color.set(0xffff00); // Make the algorithm box glow yellow
+      setTimeout(() => {
+        algorithmBoxMaterial.color.copy(originalColor); // Restore original color after 1 second
+        sendCylinder(); // Send out the data cylinder to the shape generator
+      }, 1000);
+    }
+
+    // Send out a cylinder from the algorithm box to the shape generator
+    function sendCylinder() {
+      const cylinderGeometry = new THREE.CylinderGeometry(0.1, 0.1, 2, 32);
+      const cylinderMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+      const cylinder = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
+      cylinder.rotation.z = Math.PI / 2; // Rotate to point horizontally
+      cylinder.position.set(algorithmBoxMesh.position.x, algorithmBoxMesh.position.y, algorithmBoxMesh.position.z);
+      scene.add(cylinder);
+
+      const targetPosition = new THREE.Vector3(5, -2, 0); // Target for cylinder
+
+      // Animate the cylinder movement
+      let progress = 0;
+      function moveCylinder() {
+        progress += 0.02;
+        if (progress < 1) {
+          cylinder.position.lerpVectors(algorithmBoxMesh.position, targetPosition, progress);
+          requestAnimationFrame(moveCylinder);
+        } else {
+          scene.remove(cylinder); // Remove the cylinder when it reaches the target
+        }
+      }
+
+      moveCylinder();
+    }
+  });
+
+  // Create Algorithm box with white color and "Algorithm" text in red
+  loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+    const textMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Red text
+    const algorithmTextGeometry = new THREE.TextGeometry('Algorithm', {
+      font: font,
+      size: 0.3,
+      height: 0.05,
+    });
+    const algorithmTextMesh = new THREE.Mesh(algorithmTextGeometry, textMaterial);
+    algorithmTextMesh.position.set(-3, -2, 0); // Position on the Algorithm box
+    scene.add(algorithmTextMesh);
+  });
+  const algorithmBoxGeometry = new THREE.BoxGeometry(2.5, 1.2, 1);
+  const algorithmBoxMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const algorithmBoxMesh = new THREE.Mesh(algorithmBoxGeometry, algorithmBoxMaterial);
+  algorithmBoxMesh.position.set(-2, -3, 0); // Positioned below the EEG data
+  scene.add(algorithmBoxMesh);
+
+  
+
+  // Simulate electricity effect on the top of the brain
+  const electricityLines = [];
+  function createElectricity() {
+    const electricityMaterial = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+    const start = new THREE.Vector3(-5 + Math.random(), 2 + Math.random() * 0.5, Math.random() - 0.5);
+    const end = new THREE.Vector3(-5 + Math.random(), 2 + Math.random() * 0.5, Math.random() - 0.5);
+    const points = [start, end];
+    const electricityGeometry = new THREE.BufferGeometry().setFromPoints(points);
+    const electricityLine = new THREE.Line(electricityGeometry, electricityMaterial);
+    scene.add(electricityLine);
+    electricityLines.push(electricityLine);
+
+    // Remove old electricity lines after a few seconds to simulate the effect
+    setTimeout(() => {
+      scene.remove(electricityLine);
+      const index = electricityLines.indexOf(electricityLine);
+      if (index > -1) {
+        electricityLines.splice(index, 1);
+      }
+    }, 500);
+  }
+
+  // Generate electricity lines periodically
+  setInterval(createElectricity, 300);
+  loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+    const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // green text
+    const algorithmTextGeometry = new THREE.TextGeometry('Generating...', {
+      font: font,
+      size: 0.3,
+      height: 0.05,
+    });
+    const algorithmTextMesh = new THREE.Mesh(algorithmTextGeometry, textMaterial);
+    algorithmTextMesh.position.set(4, -3, 0); // Position on the Algorithm box
+    scene.add(algorithmTextMesh);
+  });
+  
+  // Geometry array for the wireframe shape generator
+  const geometries = [
+      new THREE.BoxGeometry(2, 2, 2, 20, 20, 20), // Subdivided Cube
+      new THREE.SphereGeometry(1.5, 64, 64),      // Sphere
+      new THREE.TorusGeometry(1.2, 0.4, 30, 200), // Torus
+    ];
+
+    let currentShapeIndex = 0;
+    let edges, material, wireframeGeometry, wireframeMesh;
+    let positions, totalEdges, shuffledEdges;
+    let currentVertices = [];
+    let isFading = false;
+    const fadeDuration = 2000; // 2 seconds to fade out
+    const textElement = document.getElementById('status-text');
+
+    // Initialize the first shape
+    function createShape(index) {
+      if (wireframeMesh) {
+        scene.remove(wireframeMesh); // Remove the previous shape
+      }
+
+      const geometry = geometries[index];
+      edges = new THREE.EdgesGeometry(geometry); // Extract the edges for wireframe
+      material = new THREE.LineBasicMaterial({ color: '#00ff00', transparent: true, opacity: 1 });
+
+      // Start with an empty wireframe geometry
+      wireframeGeometry = new THREE.BufferGeometry();
+      wireframeMesh = new THREE.LineSegments(wireframeGeometry, material);
+      wireframeMesh.position.set(5, 0, 0); // Position the shape to the right
+      scene.add(wireframeMesh);
+
+      // Extract the positions of all edges
+      positions = edges.attributes.position.array;
+      totalEdges = positions.length / 6; // Each edge consists of two points (6 values: x, y, z, x, y, z)
+
+      // Shuffle edges to randomly reveal them, but without repeats
+      shuffledEdges = Array.from({ length: totalEdges }, (_, i) => i).sort(() => Math.random() - 0.5);
+
+      // Initialize empty arrays for dynamic edge drawing
+      currentVertices = [];
+      wireframeGeometry.setAttribute('position', new THREE.Float32BufferAttribute([], 3));
+
+      // Start the generation process for this shape
+      
+      isFading = false; // Reset fading
+      revealEdgesRandomly(8000); // 8 seconds to draw this shape
+    }
+
+    // Function to reveal edges randomly, stopping after 8 seconds
+    function revealEdgesRandomly(timeLimit) {
+      const startTime = Date.now();
+      const interval = 100; // Update every 100ms
+      const maxGroupSize = 8; // Maximum number of edges to reveal at once
+
+      function reveal() {
+        const elapsedTime = Date.now() - startTime;
+
+        if (elapsedTime >= timeLimit || shuffledEdges.length === 0) {
+          // After 8 seconds or when no edges remain, start the fade-out
+          startFadeOut();
+          return;
+        }
+
+        // Draw 1-8 random edges
+        const edgesToReveal = Math.floor(Math.random() * maxGroupSize) + 1;
+
+        for (let i = 0; i < edgesToReveal; i++) {
+          if (shuffledEdges.length === 0) break; // No more edges to reveal
+
+          // Get the next edge from the shuffled array
+          const nextEdgeIndex = shuffledEdges.pop();
+          const edgeStart = nextEdgeIndex * 6;
+          const edgeVertices = positions.slice(edgeStart, edgeStart + 6);
+
+          // Add the new edge to the currentVertices
+          currentVertices.push(...edgeVertices);
+        }
+
+        // Update the wireframe geometry with the new edges
+        wireframeGeometry.setAttribute('position', new THREE.Float32BufferAttribute(currentVertices, 3));
+        wireframeGeometry.attributes.position.needsUpdate = true;
+
+        setTimeout(reveal, interval); // Call reveal again after the interval
+      }
+
+      reveal(); // Start the reveal process
+    }
+
+    // Function to fade out the current shape
+    function startFadeOut() {
+      const startTime = Date.now();
+      isFading = true;
+
+      function fade() {
+        const elapsed = Date.now() - startTime;
+        const fadeProgress = elapsed / fadeDuration;
+
+        if (fadeProgress < 1) {
+          material.opacity = 1 - fadeProgress; // Gradually reduce opacity
+          requestAnimationFrame(fade); // Continue fading
+        } else {
+          // Once the fade is complete, move to the next shape
+          material.opacity = 0;
+          currentShapeIndex = (currentShapeIndex + 1) % geometries.length;
+          createShape(currentShapeIndex); // Start next shape
+        }
+      }
+
+      fade(); // Start the fade-out
+    }
+
+  // Start with the first shape
+  createShape(currentShapeIndex);
+
+  // Render the scene
+  function animate() {
+    requestAnimationFrame(animate);
+    if (wireframeMesh && !isFading) {
+      wireframeMesh.rotation.x += 0.002; // Slow down rotation
+      wireframeMesh.rotation.y += 0.002; // Slow down rotation
+    }
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  // Handle window resize
+  window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+</script>
+
+<!-- const loader = new THREE.FontLoader();
+loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+  const textMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+
+  // Function to create and display the status message in the scene
+  let statusTextMesh;
+  function createStatusText(message) {
+    if (statusTextMesh) scene.remove(statusTextMesh); // Remove the old status text
+    
+    const statusTextGeometry = new THREE.TextGeometry(message, {
+      font: font,
+      size: 0.4,
+      height: 0.05,
+    });
+    statusTextMesh = new THREE.Mesh(statusTextGeometry, textMaterial);
+    statusTextMesh.position.set(0, -3, 0); // Position the status text at the bottom of the screen
+    scene.add(statusTextMesh);
+  }
+
+  // Initial status message
+  createStatusText("Generating Shape...");
+
+function startStatusUpdates() {
+    setTimeout(() => createStatusText("Loading Processing Data..."), 8000);
+  }
+  startStatusUpdates(); -->
